@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Tipo {
+  CANTONEIRA
+  VIGAU
+  VIGAI
+  METALON
+  CANO
+  CHAPA
+  FERROOBRA
+  TELHA
+  BORRACHA
+  INOX
+  POLIA
+}
+
+enum Estado {
+  NOVO
+  USADO
+}
+
+model Produto {
+  id           Int      @id @default(autoincrement())
+  codigo       Int      @unique
+  descricao    String   @db.VarChar(100)
+  tipo         Tipo
+  estado       Estado   @default(NOVO)
+  preco        Decimal  @db.Decimal(10, 2)
+  comprimento  Decimal? @db.Decimal(10, 2)
+  bitola       Decimal? @db.Decimal(10, 2)
+  peso         Decimal? @db.Decimal(10, 2)
+  quantidade   Int      @default(0)
+  foto         String?
+  utilizacoes  String?
+  ativo        Boolean  @default(true)
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@index([tipo, bitola])
+  @@index([descricao])
+  @@map("produto")
+}
